@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: gangadhar0416/backend:2
+          # env:
+          # - name: SQL_PASSWORD
+          #   value: admin123
+          # - name: SQL_USERNAME
+          #   value: admin
+          # - name : SQL_HOST
+          #   value: database-1.c7vq7maqswxz.us-east-1.rds.amazonaws.com
+          env:
+          - name: SQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: SQL_PASSWORD
+          - name: SQL_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: backend-config
+                key: SQL_USERNAME
+          - name: SQL_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: backend-config
+                key: SQL_HOST
+          ports:
+            - containerPort: 5000
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "500Mi"
+              cpu: "200m" 
+

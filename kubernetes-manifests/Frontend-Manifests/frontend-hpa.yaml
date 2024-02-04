@@ -1,0 +1,39 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend-deployment
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend-deployment
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 2
+
+
+  # kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+  # echo '
+  # apiVersion: v1
+  # kind: Pod
+  # metadata:
+  #   name: apache-bench
+  # spec:
+  #   containers:
+  #   - name: apache-bench
+  #     image: httpd
+  #     command: ["/bin/sh", "-c", "ab -n 500000 -c 1000 http://frontend-service.default.svc.cluster.local/"]
+  # ' | kubectl apply -f -
+
+  # kubectl run  apache-bench -i --tty --rm --image=httpd -- ab -n 500000 -c 1000 http://frontend-service.svc.cluster.local/
+

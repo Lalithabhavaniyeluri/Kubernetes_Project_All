@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  # SQL_PASSWORD: admin123
+  SQL_USERNAME: admin
+  SQL_HOST: database-1.c7vq7maqswxz.us-east-1.rds.amazonaws.com

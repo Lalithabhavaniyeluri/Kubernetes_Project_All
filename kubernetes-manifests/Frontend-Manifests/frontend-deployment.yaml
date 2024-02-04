@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        test: test
+    spec:
+      containers:
+        - name: frontend
+          image: gangadhar0416/frontend:9
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+          #hpa-demo
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "500Mi"
+              cpu: "200m" 
+
+          #rolling-updates with zero down time
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+              initialDelaySeconds: 5
+              periodSeconds: 5
+              successThreshold: 1
+    #update by 50% - if pass the tests of probes.
+    strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+             
+        
