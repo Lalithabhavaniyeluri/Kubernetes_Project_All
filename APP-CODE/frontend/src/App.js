@@ -73,7 +73,7 @@ const App = () => {
   return (
     <Container maxWidth="sm">
       <Typography variant="h4" component="h1" align="center" gutterBottom>
-        Bookshop
+        Book Management
       </Typography>
       <form>
         <TextField
